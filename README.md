@@ -1,5 +1,15 @@
 # Backend Assignment
 
+## Loom videos
+
+First Video(Data Model and Testing the endpoint):
+https://www.loom.com/share/b3e636c63ded4793bf5f42ac76a91b40
+
+Second Video(State Machine walkthrough and Webhook testing and testing all the code token when paying)
+
+Third Video(testing tok_timeout)
+https://www.loom.com/share/35772b4ae63e4eecbc68543c437c5042
+
 ## Instructions
 
 To run the app, run the following command
