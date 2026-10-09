@@ -6,6 +6,7 @@ First Video(Data Model and Testing the endpoint):
 https://www.loom.com/share/b3e636c63ded4793bf5f42ac76a91b40
 
 Second Video(State Machine walkthrough and Webhook testing and testing all the code token when paying)
+https://www.loom.com/share/44589bca3b7a457a9a5f75de12e19813
 
 Third Video(testing tok_timeout)
 https://www.loom.com/share/35772b4ae63e4eecbc68543c437c5042
