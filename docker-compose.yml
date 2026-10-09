@@ -1,0 +1,59 @@
+# docker compose up --build
+#
+#   app      invoice service        http://localhost:8000
+#   mock-psp mock PSP + webhook sink http://localhost:9000
+#   db       PostgreSQL             localhost:5433 (host port; 5432 inside the network)
+#
+# Migrations run automatically when `app` starts, so there are no manual steps.
+# Reset everything (including the database) with: docker compose down -v
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      # Development-only credentials.
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: change_me
+      POSTGRES_DB: appdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      # Bound to localhost only, and on 5433 so it can't clash with a Postgres you already
+      # run on 5432. Handy for psql and for running the tests from the host.
+      - "127.0.0.1:5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d appdb"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  mock-psp:
+    build:
+      context: .
+      target: mock-psp
+    init: true # proper PID 1, so `docker compose down` stops it immediately
+    environment:
+      BIND_ADDR: 0.0.0.0:9000
+    ports:
+      - "9000:9000"
+
+  app:
+    build:
+      context: .
+      target: app
+    init: true
+    environment:
+      # Inside the compose network, services reach each other by service name.
+      DATABASE_URL: postgresql://postgres:change_me@db:5432/appdb
+      PSP_URL: http://mock-psp:9000
+      RUST_LOG: info
+    depends_on:
+      db:
+        condition: service_healthy # wait until Postgres accepts connections
+      mock-psp:
+        condition: service_started
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata:

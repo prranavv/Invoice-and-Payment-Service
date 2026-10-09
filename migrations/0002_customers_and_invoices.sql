@@ -19,7 +19,7 @@ CREATE TABLE invoices (
     business_id uuid        NOT NULL REFERENCES businesses (id),
     customer_id uuid        NOT NULL,
     state       text        NOT NULL DEFAULT 'draft'
-                CHECK (state IN ('draft', 'open', 'paid', 'void', 'uncollectible')),
+                CHECK (state IN ('draft', 'open', 'paid', 'void')),
     total_cents bigint      NOT NULL DEFAULT 0 CHECK (total_cents >= 0),
     due_date    date        NOT NULL,
     created_at  timestamptz NOT NULL DEFAULT now(),
